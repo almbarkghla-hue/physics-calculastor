@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>الموقع الكامل </title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>الحاسبة الفيزيائية للدفع والزخم</title>
+<style>
+  :root{
+    --bg1:#0a0020;
+    --bg2:#2b0066;
+    --accent:#9b5cff;
+    --accent-2:#c48cff;
+    --card:#1b0f2a;
+    --glass: rgba(255,255,255,0.03);
+    --muted: rgba(255,255,255,0.78);
+    --success:#39d98a;
+    --danger:#ff6b6b;
+    --yellow:#ffd24d;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: "Tahoma", Arial, sans-serif;
+    direction: rtl;
+    background: linear-gradient(120deg,var(--bg1),var(--bg2));
+    color: #fff;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+
+  /* animated gradient background (subtle) */
+  .bg-anim{
+    position:fixed; inset:0; z-index:-2;
+    background: linear-gradient(270deg,#120022,#2b0066,#120022);
+    background-size: 600% 600%;
+    animation: bgMove 12s linear infinite;
+    filter: blur(12px) brightness(.6);
+    opacity:1;
+  }
+  @keyframes bgMove{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+
+  .wrap{ max-width:1100px; margin:0 auto; padding:28px; position:relative; z-index:1; }
+
+  /* SPLASH / WELCOME (FULLY OPAQUE) */
+  #splash {
+    position:fixed; inset:0; z-index:9999;
+    display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg,#120022,#2b0066); /* opaque dark */
+  }
+  #splash .card{
+    width:92%; max-width:820px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(196,140,255,0.12);
+    border-radius:14px; padding:30px; text-align:center;
+    box-shadow:0 18px 50px rgba(0,0,0,0.6);
+  }
+  #splash h1{ margin:0 0 10px; font-size:26px; color:var(--accent-2); }
+  #splash p{ margin:0 0 18px; color:var(--muted); font-size:15px; line-height:1.6; }
+  #startBtn{
+    background: linear-gradient(180deg,var(--accent),var(--accent-2));
+    border:none; color:white; padding:12px 22px; border-radius:10px;
+    font-weight:700; cursor:pointer; font-size:16px;
+  }
+  #startBtn:hover{ transform:translateY(-4px); }
+
+  /* fade out */
+  .fade-out{ animation: fadeOut .6s forwards; }
+  @keyframes fadeOut{ to{ opacity:0; visibility:hidden; transform:scale(.995);} }
+
+  /* header + nav */
+  header{ text-align:center; margin-bottom:10px; }
+  header h2{ margin:0; color:var(--accent); font-size:22px; }
+  header p{ margin:6px 0 0; color:var(--muted); font-size:13px; }
+
+  .nav{ display:flex; gap:12px; justify-content:center; margin:16px 0 26px; flex-wrap:wrap; }
+  .nav button{ background:var(--glass); border:1px solid rgba(255,255,255,0.04); color:#fff; padding:10px 14px; border-radius:10px; cursor:pointer; }
+  .nav button.primary{ background: linear-gradient(180deg,var(--accent),var(--accent-2)); border:none; font-weight:700; box-shadow:0 8px 22px rgba(138,79,255,0.12); }
+
+  /* pages */
+  .page{ display:none; padding-bottom:50px; }
+  .page.active{ display:block; animation: pageIn .16s ease; }
+  @keyframes pageIn{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+
+  .card{
+    background: var(--card);
+    border-radius:12px;
+    padding:16px;
+    margin:14px auto;
+    max-width:900px;
+    border:1px solid rgba(255,255,255,0.03);
+  }
+
+  h3{ margin:0 0 8px; color:var(--accent-2); }
+  .small{ color:var(--muted); font-size:14px; margin-top:6px; }
+
+  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; margin-top:12px; }
+  input[type="number"], input[type="text"], select{
+    padding:10px; border-radius:8px; border:none; background: rgba(255,255,255,0.03); color:#fff; font-size:14px; text-align:center;
+  }
+  .action{ padding:10px 12px; border-radius:8px; border:none; cursor:pointer; background:var(--accent); color:#fff; font-weight:700; }
+  .action.alt{ background:transparent; border:1px solid rgba(255,255,255,0.06); box-shadow:none; }
+  .result{ margin-top:12px; font-weight:700; color:#dffcf7; text-align:center; }
+  .law{ background: rgba(0,0,0,0.25); border-radius:8px; padding:10px; margin-top:10px; text-align:center; color:var(--muted); font-size:16px; }
+  .example{ background: rgba(255,255,255,0.02); padding:10px; margin-top:12px; border-radius:8px; text-align:right; color:var(--muted) }
+
+  .sub-group{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+  .sub-btn{ padding:10px 14px; border-radius:8px; border:none; background:#6f3bd8; color:white; cursor:pointer; font-weight:700; }
+  .sub-btn.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.06); }
+  .back{ margin-top:14px; background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04); padding:8px 12px; border-radius:8px; cursor:pointer; }
+
+  /* conversions layout */
+  .conv-grid{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+
+  /* exercises */
+  .q{ background: rgba(255,255,255,0.02); padding:12px; border-radius:8px; margin:12px auto; max-width:900px; text-align:right; }
+  .options label{ display:block; padding:10px; border-radius:6px; margin:6px 0; background: rgba(255,255,255,0.01); cursor:pointer; }
+  .options label:hover{ background: rgba(255,255,255,0.03); }
+
+  /* responsive */
+  @media(max-width:760px){
+    .row{ flex-direction:column; }
+    input[type="number"], select{ min-width:70%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-anim" aria-hidden="true"></div>
+
+<!-- SPLASH / WELCOME -->
+<div id="splash">
+  <div class="card" role="dialog" aria-labelledby="welcomeTitle" aria-describedby="welcomeDesc">
+    <h1 id="welcomeTitle">مرحبًا بك في الحاسبة الفيزيائية للدفع والزخم</h1>
+    <p id="welcomeDesc">أداة تفاعلية لحساب قوانين الدفع/الزخم، تحويل الوحدات وطرح تدريبات مع الشرح خطوة بخطوة. اضغط "ابدأ" للدخول.</p>
+    <button id="startBtn">ابدأ</button>
+  </div>
+</div>
+
+<div class="wrap" id="app">
+
+  <header>
+    <h2>الحاسبة الفيزيائية للدفع والزخم</h2>
+    <p class="small">Momentum & Impulse — حسابات، شرح، تحويلات، وتدريبات</p>
+  </header>
+
+  <nav class="nav" role="navigation" aria-label="القوائم">
+    <button class="nav-btn primary" onclick="showPage('home')">الرئيسية</button>
+    <button class="nav-btn" onclick="showPage('formulas')">المعادلات</button>
+    <button class="nav-btn" onclick="showPage('conversions')">التحويلات</button>
+    <button class="nav-btn" onclick="showPage('exercises')">التدريبات</button>
+  </nav>
+
+  <!-- HOME -->
+  <section id="home" class="page active" aria-labelledby="homeTitle">
+    <div class="card">
+      <h3 id="homeTitle">أهلاً — اختر ما تريد</h3>
+      <p class="small">اضغط على أحد الأقسام للانتقال إليه. جميع الحسابات تشرح خطوات التعويض.</p>
+      <div class="sub-group">
+        <button class="sub-btn" onclick="showPage('formulas')">⚡ المعادلات</button>
+        <button class="sub-btn" onclick="showPage('conversions')">⚙️ التحويلات</button>
+        <button class="sub-btn" onclick="showPage('exercises')">🧠 التدريبات</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULAS -->
+  <section id="formulas" class="page" aria-labelledby="formulasTitle">
+    <div class="card">
+      <h3 id="formulasTitle">الزخم — Momentum (p = m × v)</h3>
+      <p class="small">الرموز: <strong>vi</strong> = initial velocity, <strong>vf</strong> = final velocity</p>
+      <div class="law">قانون الزخم: <strong>p = m × v</strong></div>
+
+      <!-- Sub-calculators for momentum -->
+      <div class="card" style="margin-top:12px;">
+        <h4>حاسبات الزخم (اختَر ما تريد)</h4>
+        <div class="sub-group">
+          <button class="sub-btn" onclick="openMomentumCalc('p')">احسب الزخم (p)</button>
+          <button class="sub-btn" onclick="openMomentumCalc('v')">احسب السرعة (v)</button>
+          <button class="sub-btn" onclick="openMomentumCalc('m')">احسب الكتلة (m)</button>
+        </div>
+
+        <!-- momentum: p -->
+        <div id="momentum-p" style="display:none; margin-top:12px;">
+          <div class="row">
+            <input id="mom_m_p" type="number" placeholder="m (kg)">
+            <input id="mom_v_p" type="number" placeholder="v (m/s)">
+            <button class="action" onclick="calc_p()">احسب p</button>
+          </div>
+          <div id="mom_res_p" class="result"></div>
+          <div class="example">مثال: m=5kg, v=3m/s → p = 5 × 3 = 15 kg·m/s</div>
+        </div>
+
+        <!-- momentum: v -->
+        <div id="momentum-v" style="display:none; margin-top:12px;">
+          <div class="row">
+            <input id="mom_p_v" type="number" placeholder="p (kg·m/s)">
+            <input id="mom_m_v" type="number" placeholder="m (kg)">
+            <button class="action" onclick="calc_v()">احسب v</button>
+          </div>
+          <div id="mom_res_v" class="result"></div>
+          <div class="example">مثال: p=20 kg·m/s, m=5 kg → v = 20 ÷ 5 = 4 m/s</div>
+        </div>
+
+        <!-- momentum: m -->
+        <div id="momentum-m" style="display:none; margin-top:12px;">
+          <div class="row">
+            <input id="mom_p_m" type="number" placeholder="p (kg·m/s)">
+            <input id="mom_v_m" type="number" placeholder="v (m/s)">
+            <button class="action" onclick="calc_m()">احسب m</button>
+          </div>
+          <div id="mom_res_m" class="result"></div>
+          <div class="example">مثال: p=20, v=4 → m = 20 ÷ 4 = 5 kg</div>
+        </div>
+      </div>
+
+      <!-- Impulse section -->
+      <div class="card" style="margin-top:16px;">
+        <h3>الدفع — Impulse (J = F × t)</h3>
+        <div class="law">قانون: <strong>F × t = m × (vf − vi)</strong></div>
+        <p class="small">من هذا القانون نشتق حسابات متعددة: J (الدفع)، F، t، m، vf، vi</p>
+
+        <div class="sub-group">
+          <button class="sub-btn" onclick="openImpulseCalc('J')">احسب الدفع J</button>
+          <button class="sub-btn" onclick="openImpulseCalc('F')">احسب القوة F</button>
+          <button class="sub-btn" onclick="openImpulseCalc('t')">احسب الزمن t</button>
+          <button class="sub-btn" onclick="openImpulseCalc('m')">احسب الكتلة m</button>
+          <button class="sub-btn" onclick="openImpulseCalc('vf')">احسب vf</button>
+          <button class="sub-btn" onclick="openImpulseCalc('vi')">احسب vi</button>
+        </div>
+
+        <!-- J -->
+        <div id="imp_J" style="display:none; margin-top:12px;">
+          <div class="row">
+            <input id="imp_F_J" type="number" placeholder="القوة F (N)">
+            <input id="imp_t_J" type="number" placeholder="الزمن t (s)">
+            <button class="action" onclick="calcJ()">احسب J</button>
+          </div>
+          <div id="imp_res_J" class="result"></div>
+          <div class="example">مثال: F=10N, t=2s → J = 10 × 2 = 20 N·s</div>
+        </div>
+
+        <!-- F -->
+        <div id="imp_F" style="display:none; margin-top:12px;">
+          <div class="row">
+            <input id="imp_m_F" type="number" placeholder="m (kg)">
+            <input id="imp_vf_F" type="number" placeholder="vf (m/s)">
+            <input id="imp_vi_F" type="number" placeholder="vi (m/s)">
+            <input id="imp_t_F" type="number" placeholder="t (s)">
+            <button class="action" onclick="calcF_imp()">احسب F</button>
+          </div>
+          <div id="imp_res_F" class="result"></div>
+          <div class="example">مثال: m=2kg, vf=6, vi=2, t=2s → F = 2×(6−2)/2 = 4 N</div>
+        </div>
+
+        <!-- t -->
+        <div id="imp_t" style="display:none; margin-top:12px;">
+          <div class="row">
+            <input id="imp_m_t" type="number" placeholder="m (kg)">
+            <input id="imp_vf_t" type="number" placeholder="vf (m/s)">
+            <input id="imp_vi_t" type="number" placeholder="vi (m/s)">
+            <input id="imp_F_t" type="number" placeholder="F (N)">
+            <button class="action" onclick="calct_imp()">احسب t</button>
+          </div>
+          <div id="imp_res_t" class="result"></div>
+          <div class="example">مثال: m=4, vf=10, vi=2, F=16 → t = (4×(10−2))/16 = 2 s</div>
+        </div>
+
+        <!-- m -->
+        <div id="imp_m" style="display:none; margin-top:12px;">
+          <div class="row">
+            <input id="imp_F_m" type="number" placeholder="F (N)">
+            <input id="imp_t_m" type="number" placeholder="t (s)">
+            <input id="imp_vf_m" type="number" placeholder="vf (m/s)">
+            <input id="imp_vi_m" type="number" placeholder="vi (m/s)">
+            <button class="action" onclick="calcm_imp()">احسب m</button>
+          </div>
+          <div id="imp_res_m" class="result"></div>
+          <div class="example">مثال: F=20, t=5, vf=10, vi=5 → m = (20×5)/(10−5) = 20 kg</div>
+        </div>
+
+        <!-- vf -->
+        <div id="imp_vf" style="display:none; margin-top:12px;">
+          <div class="row">
+            <input id="imp_vi_vf" type="number" placeholder="vi (m/s)">
+            <input id="imp_F_vf" type="number" placeholder="F (N)">
+            <input id="imp_t_vf" type="number" placeholder="t (s)">
+            <input id="imp_m_vf" type="number" placeholder="m (kg)">
+            <button class="action" onclick="calcVf_imp()">احسب vf</button>
+          </div>
+          <div id="imp_res_vf" class="result"></div>
+          <div class="example">مثال: vi=4, F=10, t=1, m=2 → vf = 4 + (10×1)/2 = 9 m/s</div>
+        </div>
+
+        <!-- vi -->
+        <div id="imp_vi" style="display:none; margin-top:12px;">
+          <div class="row">
+            <input id="imp_vf_vi" type="number" placeholder="vf (m/s)">
+            <input id="imp_F_vi" type="number" placeholder="F (N)">
+            <input id="imp_t_vi" type="number" placeholder="t (s)">
+            <input id="imp_m_vi" type="number" placeholder="m (kg)">
+            <button class="action" onclick="calcVi_imp()">احسب vi</button>
+          </div>
+          <div id="imp_res_vi" class="result"></div>
+          <div class="example">مثال: vf=9, F=10, t=1, m=2 → vi = 9 − (10×1)/2 = 4 m/s</div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:12px;">
+      <button class="back" onclick="showPage('home')">🔙 رجوع للرئيسية</button>
+    </div>
+  </section>
+
+  <!-- CONVERSIONS -->
+  <section id="conversions" class="page" aria-labelledby="convTitle">
+    <div class="card">
+      <h3 id="convTitle">التحويلات الفيزيائية — Conversions</h3>
+      <p class="small">الواجهة بالعربي، والوحدات بالإنجليزية. بعد كل تحويل سيظهر شرح واضح لكيف تم الحساب.</p>
+
+      <div class="conv-grid">
+        <button class="sub-btn" onclick="showConv('speed')">Speed (m/s, km/h, mph)</button>
+        <button class="sub-btn" onclick="showConv('mass')">Mass (kg, g, ton)</button>
+        <button class="sub-btn" onclick="showConv('time')">Time (s, min, hr)</button>
+        <button class="sub-btn" onclick="showConv('force')">Force (N, kN)</button>
+        <button class="sub-btn" onclick="showConv('energy')">Energy (J, kJ)</button>
+      </div>
+
+      <!-- speed -->
+      <div id="conv_speed" style="display:none; margin-top:12px;">
+        <div class="row">
+          <input id="conv_speed_val" type="number" placeholder="القيمة">
+          <select id="conv_speed_from"><option value="m/s">m/s</option><option value="km/h">km/h</option><option value="mph">mph</option></select>
+          <span style="align-self:center">→</span>
+          <select id="conv_speed_to"><option value="m/s">m/s</option><option value="km/h">km/h</option><option value="mph">mph</option></select>
+          <button class="action" onclick="convSpeed()">تحويل</button>
+        </div>
+        <div id="conv_speed_out" class="result"></div>
+        <div class="example">ملاحظة: 1 m/s = 3.6 km/h ; 1 mph = 0.44704 m/s</div>
+      </div>
+
+      <!-- mass -->
+      <div id="conv_mass" style="display:none; margin-top:12px;">
+        <div class="row">
+          <input id="conv_mass_val" type="number" placeholder="القيمة">
+          <select id="conv_mass_from"><option value="kg">kg</option><option value="g">g</option><option value="ton">ton</option></select>
+          <span style="align-self:center">→</span>
+          <select id="conv_mass_to"><option value="kg">kg</option><option value="g">g</option><option value="ton">ton</option></select>
+          <button class="action" onclick="convMass()">تحويل</button>
+        </div>
+        <div id="conv_mass_out" class="result"></div>
+        <div class="example">مثال: 5 kg → 5000 g (ضرب ×1000)</div>
+      </div>
+
+      <!-- time -->
+      <div id="conv_time" style="display:none; margin-top:12px;">
+        <div class="row">
+          <input id="conv_time_val" type="number" placeholder="القيمة">
+          <select id="conv_time_from"><option value="s">s</option><option value="min">min</option><option value="hr">hr</option></select>
+          <span style="align-self:center">→</span>
+          <select id="conv_time_to"><option value="s">s</option><option value="min">min</option><option value="hr">hr</option></select>
+          <button class="action" onclick="convTime()">تحويل</button>
+        </div>
+        <div id="conv_time_out" class="result"></div>
+        <div class="example">مثال: 120 s → 2 min (قسمنا ÷60)</div>
+      </div>
+
+      <!-- force -->
+      <div id="conv_force" style="display:none; margin-top:12px;">
+        <div class="row">
+          <input id="conv_force_val" type="number" placeholder="القيمة">
+          <select id="conv_force_from"><option value="N">N</option><option value="kN">kN</option></select>
+          <span style="align-self:center">→</span>
+          <select id="conv_force_to"><option value="N">N</option><option value="kN">kN</option></select>
+          <button class="action" onclick="convForce()">تحويل</button>
+        </div>
+        <div id="conv_force_out" class="result"></div>
+      </div>
+
+      <!-- energy -->
+      <div id="conv_energy" style="display:none; margin-top:12px;">
+        <div class="row">
+          <input id="conv_energy_val" type="number" placeholder="القيمة">
+          <select id="conv_energy_from"><option value="J">J</option><option value="kJ">kJ</option></select>
+          <span style="align-self:center">→</span>
+          <select id="conv_energy_to"><option value="J">J</option><option value="kJ">kJ</option></select>
+          <button class="action" onclick="convEnergy()">تحويل</button>
+        </div>
+        <div id="conv_energy_out" class="result"></div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:12px;">
+      <button class="back" onclick="showPage('home')">🔙 رجوع للرئيسية</button>
+    </div>
+  </section>
+
+  <!-- EXERCISES -->
+  <section id="exercises" class="page" aria-labelledby="exTitle">
+    <div class="card">
+      <h3 id="exTitle">التدريبات — أسئلة اختيار من متعدد (8)</h3>
+      <p class="small">اختر الإجابة الصحيحة لكل سؤال، ثم اضغط "اعرض النتيجة".</p>
+
+      <!-- Q1 -->
+      <div class="q">
+        <strong>1)</strong> إذا كانت الكتلة 5 kg والسرعة 4 m/s، فما الزخم؟
+        <div class="options">
+          <label><input type="radio" name="q1" value="10"> 10 kg·m/s</label>
+          <label><input type="radio" name="q1" value="15"> 15 kg·m/s</label>
+          <label><input type="radio" name="q1" value="20"> 20 kg·m/s</label>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="q">
+        <strong>2)</strong> الدفع يساوي:
+        <div class="options">
+          <label><input type="radio" name="q2" value="القوة × الزمن"> القوة × الزمن</label>
+          <label><input type="radio" name="q2" value="الكتلة × السرعة"> الكتلة × السرعة</label>
+          <label><input type="radio" name="q2" value="القوة ÷ الزمن"> القوة ÷ الزمن</label>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="q">
+        <strong>3)</strong> إذا كانت القوة 10 N والزمن 2 s، فما مقدار الدفع؟
+        <div class="options">
+          <label><input type="radio" name="q3" value="5"> 5 N·s</label>
+          <label><input type="radio" name="q3" value="20"> 20 N·s</label>
+          <label><input type="radio" name="q3" value="25"> 25 N·s</label>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="q">
+        <strong>4)</strong> العلاقة بين الدفع والزخم هي:
+        <div class="options">
+          <label><input type="radio" name="q4" value="الدفع = التغير في الزخم"> الدفع = التغير في الزخم</label>
+          <label><input type="radio" name="q4" value="الدفع = الزخم × الزمن"> الدفع = الزخم × الزمن</label>
+          <label><input type="radio" name="q4" value="الدفع = القوة ÷ الزمن"> الدفع = القوة ÷ الزمن</label>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="q">
+        <strong>5)</strong> إذا تضاعفت الكتلة وبقيت السرعة ثابتة، فإن الزخم:
+        <div class="options">
+          <label><input type="radio" name="q5" value="يتضاعف"> يتضاعف</label>
+          <label><input type="radio" name="q5" value="ينخفض للنصف"> ينخفض للنصف</label>
+          <label><input type="radio" name="q5" value="يبقى ثابت"> يبقى ثابت</label>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="q">
+        <strong>6)</strong> إذا أثرت قوة 15 N لمدة 4 s، فما الدفع؟
+        <div class="options">
+          <label><input type="radio" name="q6" value="60"> 60 N·s</label>
+          <label><input type="radio" name="q6" value="3.75"> 3.75 N·s</label>
+          <label><input type="radio" name="q6" value="19"> 19 N·s</label>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="q">
+        <strong>7)</strong> وحدة الزخم هي:
+        <div class="options">
+          <label><input type="radio" name="q7" value="N"> N</label>
+          <label><input type="radio" name="q7" value="kg·m/s"> kg·m/s</label>
+          <label><input type="radio" name="q7" value="J"> J</label>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="q">
+        <strong>8)</strong> عندما لا تؤثر قوة خارجية على النظام، فإن الزخم الكلي:
+        <div class="options">
+          <label><input type="radio" name="q8" value="يتغير باستمرار"> يتغير باستمرار</label>
+          <label><input type="radio" name="q8" value="يبقى ثابت"> يبقى ثابت</label>
+          <label><input type="radio" name="q8" value="يصبح صفراً"> يصبح صفراً</label>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px; justify-content:center;">
+        <button class="action" onclick="gradeExercises()">اعرض النتيجة</button>
+        <button class="back" onclick="showPage('home')">🔙 رجوع</button>
+      </div>
+
+      <div id="scoreCard" class="card" style="display:none; text-align:center; margin-top:12px;">
+        <h4>النتيجة النهائية</h4>
+        <div id="scoreText" class="result"></div>
+        <div id="scoreFeedback" class="small"></div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* NAVIGATION */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+  // hide score if any
+  document.getElementById('scoreCard').style.display='none';
+  // hide internal calc/conv blocks to avoid confusion
+  hideMomentumBlocks();
+  hideImpulseBlocks();
+  hideConvBlocks();
+}
+
+/* SPLASH START */
+document.getElementById('startBtn').addEventListener('click', function(){
+  const s = document.getElementById('splash');
+  s.classList.add('fade-out');
+  // remove after animation
+  setTimeout(()=> s.style.display='none', 700);
+  // ensure home page active
+  showPage('home');
+});
+
+/* MOMENTUM calculators */
+function hideMomentumBlocks(){
+  ['momentum-p','momentum-v','momentum-m'].forEach(id=>{ const e=document.getElementById(id); if(e) e.style.display='none'; });
+  ['mom_res_p','mom_res_v','mom_res_m'].forEach(id=>{ const e=document.getElementById(id); if(e) e.innerText=''; });
+}
+function openMomentumCalc(which){
+  hideMomentumBlocks();
+  if(which==='p') document.getElementById('momentum-p').style.display='block';
+  if(which==='v') document.getElementById('momentum-v').style.display='block';
+  if(which==='m') document.getElementById('momentum-m').style.display='block';
+}
+function calc_p(){
+  const m = parseFloat(document.getElementById('mom_m_p').value);
+  const v = parseFloat(document.getElementById('mom_v_p').value);
+  const out = document.getElementById('mom_res_p');
+  if(isFinite(m) && isFinite(v)){
+    const p = m * v;
+    out.innerText = `p = m × v = ${m} × ${v} = ${p.toFixed(4)} kg·m/s`;
+  } else out.innerText = '⚠️ أدخل m و v بشكل صحيح.';
+}
+function calc_v(){
+  const p = parseFloat(document.getElementById('mom_p_v').value);
+  const m = parseFloat(document.getElementById('mom_m_v').value);
+  const out = document.getElementById('mom_res_v');
+  if(isFinite(p) && isFinite(m) && m!==0){
+    const v = p / m;
+    out.innerText = `v = p ÷ m = ${p} ÷ ${m} = ${v.toFixed(4)} m/s`;
+  } else out.innerText = '⚠️ أدخل p و m بشكل صحيح (m ≠ 0).';
+}
+function calc_m(){
+  const p = parseFloat(document.getElementById('mom_p_m').value);
+  const v = parseFloat(document.getElementById('mom_v_m').value);
+  const out = document.getElementById('mom_res_m');
+  if(isFinite(p) && isFinite(v) && v!==0){
+    const m = p / v;
+    out.innerText = `m = p ÷ v = ${p} ÷ ${v} = ${m.toFixed(4)} kg`;
+  } else out.innerText = '⚠️ أدخل p و v بشكل صحيح (v ≠ 0).';
+}
+
+/* IMPULSE calculators */
+function hideImpulseBlocks(){
+  ['imp_J','imp_F','imp_t','imp_m','imp_vf','imp_vi'].forEach(id=>{ const e=document.getElementById(id); if(e) e.style.display='none'; });
+  ['imp_res_J','imp_res_F','imp_res_t','imp_res_m','imp_res_vf','imp_res_vi'].forEach(id=>{ const e=document.getElementById(id); if(e) e.innerText=''; });
+}
+function openImpulseCalc(which){
+  hideImpulseBlocks();
+  if(which==='J') document.getElementById('imp_J').style.display='block';
+  if(which==='F') document.getElementById('imp_F').style.display='block';
+  if(which==='t') document.getElementById('imp_t').style.display='block';
+  if(which==='m') document.getElementById('imp_m').style.display='block';
+  if(which==='vf') document.getElementById('imp_vf').style.display='block';
+  if(which==='vi') document.getElementById('imp_vi').style.display='block';
+}
+
+/* Calculations for impulse */
+function calcJ(){
+  const F = parseFloat(document.getElementById('imp_F_J').value);
+  const t = parseFloat(document.getElementById('imp_t_J').value);
+  const out = document.getElementById('imp_res_J');
+  if(isFinite(F) && isFinite(t)){
+    const J = F * t;
+    out.innerText = `J = F × t = ${F} × ${t} = ${J.toFixed(4)} N·s`;
+  } else out.innerText = '⚠️ أدخل F و t بشكل صحيح.';
+}
+
+function calcF_imp(){
+  const m = parseFloat(document.getElementById('imp_m_F').value);
+  const vf = parseFloat(document.getElementById('imp_vf_F').value);
+  const vi = parseFloat(document.getElementById('imp_vi_F').value);
+  const t = parseFloat(document.getElementById('imp_t_F').value);
+  const out = document.getElementById('imp_res_F');
+  if(isFinite(m) && isFinite(vf) && isFinite(vi) && isFinite(t) && t!==0){
+    const F = m * (vf - vi) / t;
+    out.innerText = `F = m×(vf−vi) ÷ t = ${m}×(${vf}−${vi}) ÷ ${t} = ${F.toFixed(4)} N`;
+  } else out.innerText = '⚠️ أدخل القيم بشكل صحيح (t ≠ 0).';
+}
+
+function calct_imp(){
+  const m = parseFloat(document.getElementById('imp_m_t').value);
+  const vf = parseFloat(document.getElementById('imp_vf_t').value);
+  const vi = parseFloat(document.getElementById('imp_vi_t').value);
+  const F = parseFloat(document.getElementById('imp_F_t').value);
+  const out = document.getElementById('imp_res_t');
+  if(isFinite(m) && isFinite(vf) && isFinite(vi) && isFinite(F) && F!==0){
+    const t = (m * (vf - vi)) / F;
+    out.innerText = `t = (m×(vf−vi)) ÷ F = (${m}×(${vf}−${vi})) ÷ ${F} = ${t.toFixed(4)} s`;
+  } else out.innerText = '⚠️ أدخل القيم بشكل صحيح (F ≠ 0).';
+}
+
+function calcm_imp(){
+  const F = parseFloat(document.getElementById('imp_F_m').value);
+  const t = parseFloat(document.getElementById('imp_t_m').value);
+  const vf = parseFloat(document.getElementById('imp_vf_m').value);
+  const vi = parseFloat(document.getElementById('imp_vi_m').value);
+  const out = document.getElementById('imp_res_m');
+  if(isFinite(F) && isFinite(t) && isFinite(vf) && isFinite(vi) && (vf - vi) !== 0){
+    const m = (F * t) / (vf - vi);
+    out.innerText = `m = (F×t) ÷ (vf−vi) = (${F}×${t}) ÷ (${vf}−${vi}) = ${m.toFixed(4)} kg`;
+  } else out.innerText = '⚠️ أدخل القيم بشكل صحيح (vf ≠ vi).';
+}
+
+function calcVf_imp(){
+  const vi = parseFloat(document.getElementById('imp_vi_vf').value);
+  const F = parseFloat(document.getElementById('imp_F_vf').value);
+  const t = parseFloat(document.getElementById('imp_t_vf').value);
+  const m = parseFloat(document.getElementById('imp_m_vf').value);
+  const out = document.getElementById('imp_res_vf');
+  if(isFinite(vi) && isFinite(F) && isFinite(t) && isFinite(m) && m!==0){
+    const vf = vi + (F * t) / m;
+    out.innerText = `vf = vi + (F×t)÷m = ${vi} + (${F}×${t})÷${m} = ${vf.toFixed(4)} m/s`;
+  } else out.innerText = '⚠️ أدخل القيم بشكل صحيح (m ≠ 0).';
+}
+
+function calcVi_imp(){
+  const vf = parseFloat(document.getElementById('imp_vf_vi').value);
+  const F = parseFloat(document.getElementById('imp_F_vi').value);
+  const t = parseFloat(document.getElementById('imp_t_vi').value);
+  const m = parseFloat(document.getElementById('imp_m_vi').value);
+  const out = document.getElementById('imp_res_vi');
+  if(isFinite(vf) && isFinite(F) && isFinite(t) && isFinite(m) && m!==0){
+    const vi = vf - (F * t) / m;
+    out.innerText = `vi = vf − (F×t)÷m = ${vf} − (${F}×${t})÷${m} = ${vi.toFixed(4)} m/s`;
+  } else out.innerText = '⚠️ أدخل القيم بشكل صحيح (m ≠ 0).';
+}
+
+/* CONVERSIONS */
+function hideConvBlocks(){
+  ['conv_speed','conv_mass','conv_time','conv_force','conv_energy'].forEach(id=>{ const e=document.getElementById(id); if(e) e.style.display='none'; });
+  ['conv_speed_out','conv_mass_out','conv_time_out','conv_force_out','conv_energy_out'].forEach(id=>{ const e=document.getElementById(id); if(e) e.innerHTML=''; });
+}
+function showConv(name){
+  hideConvBlocks();
+  if(name==='speed') document.getElementById('conv_speed').style.display='block';
+  if(name==='mass') document.getElementById('conv_mass').style.display='block';
+  if(name==='time') document.getElementById('conv_time').style.display='block';
+  if(name==='force') document.getElementById('conv_force').style.display='block';
+  if(name==='energy') document.getElementById('conv_energy').style.display='block';
+}
+function roundSmart(x){
+  if(!isFinite(x)) return x;
+  if(Math.abs(x)>=1000) return Math.round(x*100)/100;
+  if(Math.abs(x)>=1) return Math.round(x*1000)/1000;
+  return Number.parseFloat(x.toPrecision(4));
+}
+
+/* speed conv */
+function convSpeed(){
+  const val = parseFloat(document.getElementById('conv_speed_val').value);
+  const from = document.getElementById('conv_speed_from').value;
+  const to = document.getElementById('conv_speed_to').value;
+  const out = document.getElementById('conv_speed_out');
+  if(!isFinite(val)){ out.innerHTML='⚠️ أدخل قيمة صحيحة'; return; }
+  let mps = val;
+  let explanation = '';
+  if(from==='km/h'){ mps = val / 3.6; explanation = `قسمنا ${val} ÷ 3.6 لتحويل km/h → m/s.`; }
+  else if(from==='mph'){ mps = val * 0.44704; explanation = `ضربنا ${val} × 0.44704 لتحويل mph → m/s.`; }
+  if(to==='km/h'){ const res = mps * 3.6; explanation += ` ثم ضربنا × 3.6 لتحويل m/s → km/h.`; out.innerHTML = `${val} ${from} = ${roundSmart(res)} ${to}<br><small>${explanation}</small>`; }
+  else if(to==='mph'){ const res = mps / 0.44704; explanation += ` ثم قسمنا ÷ 0.44704 لتحويل m/s → mph.`; out.innerHTML = `${val} ${from} = ${roundSmart(res)} ${to}<br><small>${explanation}</small>`; }
+  else { out.innerHTML = `${val} ${from} = ${roundSmart(mps)} ${to}<br><small>${explanation||'تحويل إلى m/s'}.</small>`; }
+}
+
+/* mass conv */
+function convMass(){
+  const val = parseFloat(document.getElementById('conv_mass_val').value);
+  const from = document.getElementById('conv_mass_from').value;
+  const to = document.getElementById('conv_mass_to').value;
+  const out = document.getElementById('conv_mass_out');
+  if(!isFinite(val)){ out.innerHTML='⚠️ أدخل قيمة صحيحة'; return; }
+  let kg = val;
+  let explanation = '';
+  if(from==='g'){ kg = val / 1000; explanation = `قسمنا ${val} ÷ 1000 لتحويل g → kg.`; }
+  else if(from==='ton'){ kg = val * 1000; explanation = `ضربنا ${val} × 1000 لتحويل ton → kg.`; }
+  let res = kg;
+  if(to==='g'){ res = kg * 1000; explanation += ` ثم ضربنا × 1000 لتحويل kg → g.`; }
+  else if(to==='ton'){ res = kg / 1000; explanation += ` ثم قسمنا ÷ 1000 لتحويل kg → ton.`; }
+  out.innerHTML = `${val} ${from} = ${roundSmart(res)} ${to}<br><small>${explanation}</small>`;
+}
+
+/* time conv */
+function convTime(){
+  const val = parseFloat(document.getElementById('conv_time_val').value);
+  const from = document.getElementById('conv_time_from').value;
+  const to = document.getElementById('conv_time_to').value;
+  const out = document.getElementById('conv_time_out');
+  if(!isFinite(val)){ out.innerHTML='⚠️ أدخل قيمة صحيحة'; return; }
+  let s = val;
+  let explanation = '';
+  if(from==='min'){ s = val * 60; explanation = `ضربنا ${val} × 60 لتحويل min → s.`; }
+  else if(from==='hr'){ s = val * 3600; explanation = `ضربنا ${val} × 3600 لتحويل hr → s.`; }
+  let res = s;
+  if(to==='min'){ res = s / 60; explanation += ` ثم قسمنا ÷ 60 لتحويل s → min.`; }
+  else if(to==='hr'){ res = s / 3600; explanation += ` ثم قسمنا ÷ 3600 لتحويل s → hr.`; }
+  out.innerHTML = `${val} ${from} = ${roundSmart(res)} ${to}<br><small>${explanation}</small>`;
+}
+
+/* force conv */
+function convForce(){
+  const val = parseFloat(document.getElementById('conv_force_val').value);
+  const from = document.getElementById('conv_force_from').value;
+  const to = document.getElementById('conv_force_to').value;
+  const out = document.getElementById('conv_force_out');
+  if(!isFinite(val)){ out.innerHTML='⚠️ أدخل قيمة صحيحة'; return; }
+  let N = val;
+  let explanation = '';
+  if(from==='kN'){ N = val * 1000; explanation = `ضربنا ${val} × 1000 لتحويل kN → N.`; }
+  if(to==='kN'){ const res = N / 1000; explanation += ` ثم قسمنا ÷ 1000 لتحويل N → kN.`; out.innerHTML = `${val} ${from} = ${roundSmart(res)} ${to}<br><small>${explanation}</small>`; }
+  else out.innerHTML = `${val} ${from} = ${roundSmart(N)} ${to}<br><small>${explanation}</small>`;
+}
+
+/* energy conv */
+function convEnergy(){
+  const val = parseFloat(document.getElementById('conv_energy_val').value);
+  const from = document.getElementById('conv_energy_from').value;
+  const to = document.getElementById('conv_energy_to').value;
+  const out = document.getElementById('conv_energy_out');
+  if(!isFinite(val)){ out.innerHTML='⚠️ أدخل قيمة صحيحة'; return; }
+  let J = val;
+  let explanation = '';
+  if(from==='kJ'){ J = val * 1000; explanation = `ضربنا ${val} × 1000 لتحويل kJ → J.`; }
+  if(to==='kJ'){ const res = J / 1000; explanation += ` ثم قسمنا ÷ 1000 لتحويل J → kJ.`; out.innerHTML = `${val} ${from} = ${roundSmart(res)} ${to}<br><small>${explanation}</small>`; }
+  else out.innerHTML = `${val} ${from} = ${roundSmart(J)} ${to}<br><small>${explanation}</small>`;
+}
+
+/* EXERCISES grading */
+function gradeExercises(){
+  const answers = { q1:'20', q2:'القوة × الزمن', q3:'20', q4:'الدفع = التغير في الزخم', q5:'يتضاعف', q6:'60', q7:'kg·m/s', q8:'يبقى ثابت' };
+  let score=0, total=Object.keys(answers).length;
+  for(const q in answers){
+    const opts = document.getElementsByName(q);
+    let sel='';
+    for(const o of opts) if(o.checked) sel = o.value;
+    if(sel === answers[q]) score++;
+  }
+  document.getElementById('scoreCard').style.display='block';
+  document.getElementById('scoreText').innerText = `أحرزت ${score} من ${total} إجابات صحيحة.`;
+  const fb = document.getElementById('scoreFeedback');
+  const pct = Math.round((score/total)*100);
+  let feedback='';
+  if(pct===100) feedback='أحسنت! إجابات ممتازة 🎉';
+  else if(pct>=75) feedback='ممتاز — قربت الهدف 👍';
+  else if(pct>=50) feedback='جيد — حاول تراجع النقاط الغائبة';
+  else feedback='لا بأس — كرر المحاولة وراجع الشرح.';
+  fb.innerText = feedback;
+  // scroll to score
+  document.getElementById('scoreCard').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* initial state */
+hideMomentumBlocks();
+hideImpulseBlocks();
+hideConvBlocks();
+showPage('home');
+</script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
