@@ -167,7 +167,6 @@ function openEquation(eq){
   eqList.appendChild(title);
   eqList.appendChild(div);
   const back=document.createElement("button");
-  back.textContent="رجوع";
   back.onclick=()=>{eqList.innerHTML=""; equations.forEach(eq=>{
     const b=document.createElement("button");
     b.textContent=eq.name;
