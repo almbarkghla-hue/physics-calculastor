@@ -115,7 +115,7 @@ const equations = [
 { name:"التسارع", formula:"a = (Vf - Vi) / t", variables:["a","Vf","Vi","t"], calc:(v)=>v.a?v.a:(v.Vf-v.Vi)/v.t },
 { name:"السرعة النهائية", formula:"Vf = Vi + a × t", variables:["Vf","Vi","a","t"], calc:(v)=>v.Vf?v.Vf:v.Vi+v.a*v.t },
 { name:"حفظ الزخم", formula:"Vf = (m1 × v1 + m2 × v2) / (m1 + m2)", variables:["Vf","m1","v1","m2","v2"], calc:(v)=>v.Vf?v.Vf:(v.m1*v.v1+v.m2*v.v2)/(v.m1+v.m2) },
-{ name:"قانون كبلر الثالث", formula:"T = 2π × √(a³ / (G × M))", variables:["T","a","G","M"], calc:(v)=>v.T?v.T:2*Math.PI*Math.sqrt(Math.pow(v.a,3)/(v.G*v.M)) },
+{ name:"الزمن الدوري", formula:"T = 2π × √(a³ / (G × M))", variables:["T","a","G","M"], calc:(v)=>v.T?v.T:2*Math.PI*Math.sqrt(Math.pow(v.a,3)/(v.G*v.M)) },
 { name:"التسارع المركزي", formula:"ac = v² / r", variables:["ac","v","r"], calc:(v)=>v.ac?v.ac:(v.v*v.v)/v.r },
 { name:"قانون الجذب الكوني", formula:"F = (G × m1 × m2) / r²", variables:["F","G","m1","m2","r"], calc:(v)=>v.F?v.F:(v.G*v.m1*v.m2)/(v.r*v.r) },
 { name:"تسارع الجاذبية", formula:"g = (G × M) / r²", variables:["g","G","M","r"], calc:(v)=>v.g?v.g:(v.G*v.M)/(v.r*v.r) }
@@ -351,8 +351,8 @@ const tests = [
     ["القانون: Vf = ?", ["(m1v1+m2v2)/(m1+m2)", "F×d", "a×t", "V/t"], 0],
     ["الزخم الكلي قبل وبعد ...", ["مختلف", "متساوي", "صفر", "عشوائي"], 1]
   ]},
-  { title: "اختبار كبلر الثالث", q: [
-    ["كبلر الثالث يربط بين؟", ["T و a", "v و F", "m و t", "a و F"], 0],
+  { title: "اختبار الزمن الدوري ", q: [
+    ["الزمن الدوري يربط بين؟", ["T و a", "v و F", "m و t", "a و F"], 0],
     ["الصيغة: ?", ["T = 2π√(a³/GM)", "F = ma", "p=mv", "I=Ft"], 0],
     ["ينطبق على؟", ["حركة الكواكب", "السيارات", "القطارات", "الالكترونات"], 0],
     ["T يتناسب طرديًا مع؟", ["a³", "a²", "a", "1/a"], 0],
