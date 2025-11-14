@@ -166,14 +166,9 @@ function openEquation(eq){
   div.appendChild(res);
   eqList.appendChild(title);
   eqList.appendChild(div);
-  const back=document.createElement("button");
-  back.onclick=()=>{eqList.innerHTML=""; equations.forEach(eq=>{
-    const b=document.createElement("button");
-    b.textContent=eq.name;
-    b.onclick=()=>openEquation(eq);
-    eqList.appendChild(b);
-  });};
-  eqList.appendChild(back);
+  <button onclick="history.back()">رجوع للصفحة السابقة</button>
+
+<button onclick="location.href='index.html'">القائمة الرئيسية</button>
 }
 </script>
 <script>
@@ -285,7 +280,9 @@ function solveFormula(formula, unknownId, inputs, outputId) {
     <option value="energy">الطاقة</option>
   </select>
   <div id="convOptions"></div>
-  <button class="back" onclick="goBack()">رجوع</button>
+  <button onclick="history.back()">رجوع للصفحة السابقة</button>
+
+<button onclick="location.href='index.html'">القائمة الرئيسية</button>
 </div>
 
 <!-- ====== الاختبارات ====== -->
@@ -293,7 +290,9 @@ function solveFormula(formula, unknownId, inputs, outputId) {
   <h2>الاختبارات الفيزيائية</h2>
   <div id="testList"></div>
   <div id="testArea"></div>
-  <button class="back" onclick="goBack()">رجوع</button>
+  <button onclick="history.back()">رجوع للصفحة السابقة</button>
+
+<button onclick="location.href='index.html'">القائمة الرئيسية</button>
 </div>
 
 <!-- ====== عن الموقع ====== -->
