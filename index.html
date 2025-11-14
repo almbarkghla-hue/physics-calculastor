@@ -176,7 +176,101 @@ function openEquation(eq){
   eqList.appendChild(back);
 }
 </script>
+<script>
 
+// دالة عامة لحل أي قانون حسب المجهول
+function solveFormula(formula, unknownId, inputs, outputId) {
+    let unknown = document.getElementById(unknownId).value;
+
+    // نجيب القيم
+    let vals = {};
+    for (let key in inputs) {
+        vals[key] = parseFloat(document.getElementById(inputs[key]).value);
+    }
+
+    let result;
+
+    switch (formula) {
+
+        // ========= الشغل =========
+        case "work":
+            if (unknown === "W") result = vals.F * vals.d * Math.cos(vals.th * Math.PI/180);
+            if (unknown === "F") result = vals.W / (vals.d * Math.cos(vals.th * Math.PI/180));
+            if (unknown === "d") result = vals.W / (vals.F * Math.cos(vals.th * Math.PI/180));
+            if (unknown === "th") result = "لا يمكن إيجاد الزاوية من هذا القانون";
+            break;
+
+        // ========= الزخم =========
+        case "momentum":
+            if (unknown === "p") result = vals.m * vals.v;
+            if (unknown === "m") result = vals.p / vals.v;
+            if (unknown === "v") result = vals.p / vals.m;
+            break;
+
+        // ========= الدفع =========
+        case "impulse":
+            if (unknown === "I") result = vals.F * vals.t;
+            if (unknown === "F") result = vals.I / vals.t;
+            if (unknown === "t") result = vals.I / vals.F;
+            break;
+
+        // ========= قانون نيوتن =========
+        case "newton2":
+            if (unknown === "F") result = vals.m * vals.a;
+            if (unknown === "m") result = vals.F / vals.a;
+            if (unknown === "a") result = vals.F / vals.m;
+            break;
+
+        // ========= الإزاحة =========
+        case "displacement":
+            if (unknown === "d") result = vals.Vi * vals.t + 0.5 * vals.a * vals.t * vals.t;
+            break;
+
+        // ========= التسارع =========
+        case "acceleration":
+            if (unknown === "a") result = (vals.Vf - vals.Vi) / vals.t;
+            if (unknown === "Vf") result = vals.Vi + vals.a * vals.t;
+            if (unknown === "Vi") result = vals.Vf - vals.a * vals.t;
+            break;
+
+        // ========= السرعة النهائية =========
+        case "finalV":
+            if (unknown === "Vf") result = vals.Vi + vals.a * vals.t;
+            if (unknown === "Vi") result = vals.Vf - vals.a * vals.t;
+            break;
+
+        // ========= حفظ الزخم =========
+        case "conserveP":
+            if (unknown === "Vf_total")
+                result = (vals.m1 * vals.v1 + vals.m2 * vals.v2) / (vals.m1 + vals.m2);
+            break;
+
+        // ========= كبلر الثالث =========
+        case "kepler":
+            if (unknown === "T")
+                result = 2 * Math.PI * Math.sqrt((vals.a ** 3) / (vals.G * vals.M));
+            break;
+
+        // ========= التسارع المركزي =========
+        case "ac":
+            if (unknown === "ac") result = (vals.v ** 2) / vals.r;
+            break;
+
+        // ========= الجذب الكوني =========
+        case "gravity":
+            if (unknown === "F") result = (vals.G * vals.m1 * vals.m2) / (vals.r ** 2);
+            break;
+
+        // ========= تسارع الجاذبية =========
+        case "g":
+            if (unknown === "g") result = (vals.G * vals.M) / (vals.r ** 2);
+            break;
+    }
+
+    document.getElementById(outputId).value = result;
+}
+
+</script>
 </body>
 </html>
 <!-- ====== التحويلات ====== -->
